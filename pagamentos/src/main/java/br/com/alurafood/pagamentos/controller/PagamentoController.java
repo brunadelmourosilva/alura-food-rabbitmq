@@ -2,6 +2,8 @@ package br.com.alurafood.pagamentos.controller;
 
 import br.com.alurafood.pagamentos.dto.PagamentoDto;
 import br.com.alurafood.pagamentos.service.PagamentoService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Message;
@@ -28,6 +30,9 @@ public class PagamentoController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @GetMapping
     public Page<PagamentoDto> listar(@PageableDefault(size = 10) Pageable paginacao) {
         return service.obterTodos(paginacao);
@@ -42,12 +47,12 @@ public class PagamentoController {
 
 
     @PostMapping
-    public ResponseEntity<PagamentoDto> cadastrar(@RequestBody @Valid PagamentoDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<PagamentoDto> cadastrar(@RequestBody @Valid PagamentoDto dto, UriComponentsBuilder uriBuilder) throws JsonProcessingException {
         PagamentoDto pagamento = service.criarPagamento(dto);
         URI endereco = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamento.getId()).toUri();
 
-        var message = new Message(("Criei um pagamento com o id " + pagamento.getId()).getBytes());
-        rabbitTemplate.send("pagamento.concluido", message);
+        // var message = new Message(("Criei um pagamento com o id " + pagamento.getId()).getBytes());
+        rabbitTemplate.convertAndSend("pagamento.concluido", pagamento);
 
         return ResponseEntity.created(endereco).body(pagamento);
     }
