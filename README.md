@@ -3,7 +3,14 @@
 ## Microsserviços na prática: mensageria com RabbitMQ
 
 
-* docker-compose para o curso
+* docker run
+
+```
+# latest RabbitMQ 3.11
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
+```
+
+* docker-compose
 
 ```
 version: "3.6"
@@ -22,3 +29,6 @@ services:
             - RABBITMQ_DEFAULT_USER=bruna
             - RABBITMQ_DEFAULT_PASS=alura
 ```
+
+---
+
