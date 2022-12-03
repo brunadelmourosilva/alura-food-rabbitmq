@@ -1,21 +1,20 @@
-package br.com.alurafood.pagamentos.dto;
+package br.com.alurafood.pedidos.messages;
 
-import br.com.alurafood.pagamentos.model.Status;
-import lombok.Getter;
-import lombok.Setter;
+import br.com.alurafood.pedidos.messages.enums.StatusPagamento;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-public class PagamentoDto {
+@Data
+public class PagamentoMessage {
+
     private Long id;
     private BigDecimal valor;
     private String nome;
     private String numero;
     private String expiracao;
     private String codigo;
-    private Status status;
+    private StatusPagamento status;
     private Long formaDePagamentoId;
     private Long pedidoId;
 }
