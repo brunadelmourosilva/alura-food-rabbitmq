@@ -43,3 +43,10 @@ services:
 http://tryrabbitmq.com/
 ```
 
+---
+
+### Estrutura para o envio e recebimento de mensagens
+
+![image](https://user-images.githubusercontent.com/61791877/206879510-52d7e4d0-1039-4362-91bc-6e598df2a04a.png)
+
+
