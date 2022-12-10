@@ -37,3 +37,9 @@ services:
 ```
 ---
 
+* RabbitMQ Simulator
+
+```
+http://tryrabbitmq.com/
+```
+
