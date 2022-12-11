@@ -1,12 +1,11 @@
 package br.com.alurafood.pagamentos.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Bean
-    public Queue criaFila() {
-        return QueueBuilder.nonDurable("pagamento.concluido").build();
-    }
+    @Value("${exchange.pagamentos}")
+    private String pagamentosExchange;
 
     /* destined to receive messages */
     @Bean
@@ -44,5 +41,11 @@ public class RabbitMQConfig {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
+    }
+
+    /* create exchange */
+    @Bean
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange(pagamentosExchange);
     }
 }

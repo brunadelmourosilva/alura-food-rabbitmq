@@ -9,6 +9,7 @@ import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,6 +24,9 @@ import java.net.URI;
 @RestController
 @RequestMapping("/pagamentos")
 public class PagamentoController {
+
+    @Value("${exchange.pagamentos}")
+    private String pagamentosExchange;
 
     @Autowired
     private PagamentoService service;
@@ -51,8 +55,7 @@ public class PagamentoController {
         PagamentoDto pagamento = service.criarPagamento(dto);
         URI endereco = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamento.getId()).toUri();
 
-        // var message = new Message(("Criei um pagamento com o id " + pagamento.getId()).getBytes());
-        rabbitTemplate.convertAndSend("pagamento.concluido", pagamento);
+        rabbitTemplate.convertAndSend(pagamentosExchange, "", pagamento);
 
         return ResponseEntity.created(endereco).body(pagamento);
     }

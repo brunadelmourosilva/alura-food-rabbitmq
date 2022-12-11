@@ -2,6 +2,7 @@ package br.com.alurafood.pedidos.listeners;
 
 import br.com.alurafood.pedidos.messages.PagamentoMessage;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,8 @@ import org.springframework.stereotype.Component;
 public class PagamentoListener {
 
 
-    @RabbitListener(queues = "pagamento.concluido")
+
+    @RabbitListener(queues = "#{'${queue.pagamentos.pedido}'}")
     public void recebeMensagem(@Payload PagamentoMessage pagamentoMessage) {
         String mensagem = """
                 Dados do pagamento: %s
