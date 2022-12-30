@@ -22,8 +22,14 @@ public class AvaliacaoAMQPConfiguration {
     @Value("${queue.pagamentos.avaliacao}")
     private String avaliacaoQueue;
 
+    @Value("${queue.pagamentos.avaliacao.dql}")
+    private String avaliacaoQueueDql;
+
     @Value("${exchange.pagamentos}")
     private String pagamentosExchange;
+
+    @Value("${exchange.pagamentos.dlx}")
+    private String pagamentosExchangeDlx;
 
     @Bean
     public Jackson2JsonMessageConverter messageConverter(){
@@ -42,6 +48,7 @@ public class AvaliacaoAMQPConfiguration {
     public Queue filaDetalhesAvaliacao() {
         return QueueBuilder
                 .nonDurable(avaliacaoQueue)
+                .deadLetterExchange(pagamentosExchangeDlx)
                 .build();
     }
 
@@ -57,6 +64,27 @@ public class AvaliacaoAMQPConfiguration {
         return BindingBuilder
                 .bind(filaDetalhesAvaliacao())
                 .to(fanoutExchange());
+    }
+
+    @Bean
+    public Queue filaDlqDetalhesAvaliacao() {
+        return QueueBuilder
+                .nonDurable(avaliacaoQueueDql)
+                .build();
+    }
+
+    @Bean
+    public FanoutExchange deadLetterExchange() {
+        return ExchangeBuilder
+                .fanoutExchange(pagamentosExchangeDlx)
+                .build();
+    }
+
+    @Bean
+    public Binding bindDlxPagamentoAvaliacao() {
+        return BindingBuilder
+                .bind(filaDlqDetalhesAvaliacao())
+                .to(deadLetterExchange());
     }
 
     @Bean
