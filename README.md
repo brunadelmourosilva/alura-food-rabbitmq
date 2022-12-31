@@ -129,3 +129,8 @@ visualizar os resultados esperados:
 http://localhost:8085
 ```
 
+---
+
+Neste ponto, se criarmos uma fila no node rabbit2, por exemplo, e postarmos uma mensagem nessa fila, veremos que, se pararmos essa instância e depois, startarmos ela novamente, a mensagem foi perdida, pois ainda as demais instâncias não estão configuradas. Para resolver esse problema, basta:
+
+- 
