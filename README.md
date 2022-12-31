@@ -131,6 +131,23 @@ http://localhost:8085
 
 ---
 
-Neste ponto, se criarmos uma fila no node rabbit2, por exemplo, e postarmos uma mensagem nessa fila, veremos que, se pararmos essa instância e depois, startarmos ela novamente, a mensagem foi perdida, pois ainda as demais instâncias não estão configuradas. Para resolver esse problema, basta:
+Neste ponto, se criarmos uma fila no node rabbit2, por exemplo, e postarmos uma mensagem nessa fila, veremos que, se pararmos essa instância e depois, startarmos ela novamente, a mensagem foi perdida, pois ainda as demais instâncias não estão configuradas. Para resolver esse problema, basta adicionar a policy **HA mode**:
 
-- 
+- Na interface do RabbitMQ -> Admin -> Policies
+    - Adicionar:
+    ![image](https://user-images.githubusercontent.com/61791877/210120799-62769b29-adf9-4622-9eab-e4e37a0ffb22.png)
+
+```
+Add / update a policy:
+
+Name: ha
+Pattern: .*
+Apply to: Exchanges and queues
+Priority: vazio
+Definition: ha mode = all
+```
+
+- Para testar, basta publicar a mensagem na fila, e depois, dar um stop no contâiner com ```docker exec -it rabbit2 rabbitmqctl stop_app```. Veja que o **rabbit1** assumiu a mensagem que havia sido publica na fila do contâiner **rabbit2**
+
+![image](https://user-images.githubusercontent.com/61791877/210120871-b79b6c17-1ef0-49d5-9587-09f68309c6ab.png)
+
