@@ -89,7 +89,7 @@ docker run -d --rm --net alura --hostname rabbit2 --name rabbit2 -p 8086:15672 -
 docker run -d --rm --net alura --hostname rabbit3 --name rabbit3 -p 8087:15672 -e RABBITMQ_ERLANG_COOKIE=alura_secret rabbitmq:3.10-management
 ```
 
-*sobre a variável de ambiente RABBITMQ_ERLANG_COOKIE
+*sobre a variável de ambiente RABBITMQ_ERLANG_COOKIE*
 
 >Setar todos os contâiners com o mesmo Erlang Cookie necessário para a comunicação e espelhamento das mensagens. Então, para que as instâncias se comuniquem dentro do cluster, o cookie seja o mesmo para todas.
 
