@@ -152,3 +152,9 @@ Definition: ha mode = all
 
 ![image](https://user-images.githubusercontent.com/61791877/210120871-b79b6c17-1ef0-49d5-9587-09f68309c6ab.png)
 
+---
+
+### Quorum queues e mirrored queues(usada no exemplo anterior)
+
+https://www.rabbitmq.com/quorum-queues.html#feature-comparison
+
