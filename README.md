@@ -63,3 +63,69 @@ Para ativá-lo, basta utilizar o comando no contâiner docker: ``` rabbitmq-plug
 
 - Link para ativar shovel dinâmico: https://www.rabbitmq.com/shovel-dynamic.html
 
+---
+
+### Alta disponibilidade - criando um cluster
+
+O objetivo é criar instâncias em um cluster, para que, caso haja falha em uma instância, as demais possam recuperar as mensagens das filas em que essa isntância por algum motivo, deixou de funcionar. Dessa forma, aplicamos o conceito de alta disponibilidade em nosso sistema, evitando a perca de mensagens.
+
+- criar uma network no docker, para que as instâncias possam se comunicar:
+
+```
+docker network create alura
+```
+
+- criar as instâncias, em diferentes portas:
+
+```
+docker run -d --rm --net alura --hostname rabbit1 --name rabbit1 -p 8085:15672 -e RABBITMQ_ERLANG_COOKIE=alura_secret rabbitmq:3.10-management
+```
+
+```
+docker run -d --rm --net alura --hostname rabbit2 --name rabbit2 -p 8086:15672 -e RABBITMQ_ERLANG_COOKIE=alura_secret rabbitmq:3.10-management
+```
+
+```
+docker run -d --rm --net alura --hostname rabbit3 --name rabbit3 -p 8087:15672 -e RABBITMQ_ERLANG_COOKIE=alura_secret rabbitmq:3.10-management
+```
+
+*sobre a variável de ambiente RABBITMQ_ERLANG_COOKIE
+
+>Setar todos os contâiners com o mesmo Erlang Cookie necessário para a comunicação e espelhamento das mensagens. Então, para que as instâncias se comuniquem dentro do cluster, o cookie seja o mesmo para todas.
+
+- unindo os contâiners **rabbit2** e **rabbit3** ao contâiner **rabbit1**:
+
+    - parando o contâiner rabbit2
+        ```
+        docker exec -it rabbit2 rabbitmqctl stop_app
+        ```
+        
+    - resetando as configurações do rabbit2
+        ```
+        docker exec -it rabbit2 rabbitmqctl reset
+        ```
+
+    - unindo o contâiner rabbit2 ao rabbit1
+        ```
+        docker exec -it rabbit2 rabbitmqctl join_cluster rabbit@rabbit1
+        ```
+        
+    - startando o contâiner rabbit2
+        ```
+        docker exec -it rabbit2 rabbitmqctl start_app
+        ```
+o mesmo se aplica ao contâiner rabbit3:
+
+```
+docker exec -it rabbit3 rabbitmqctl stop_app
+docker exec -it rabbit3 rabbitmqctl reset
+docker exec -it rabbit3 rabbitmqctl join_cluster rabbit@rabbit1
+docker exec -it rabbit3 rabbitmqctl start_app
+```
+
+visualizar os resultados esperados:
+
+```
+http://localhost:8085
+```
+
