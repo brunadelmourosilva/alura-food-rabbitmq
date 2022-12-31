@@ -67,7 +67,7 @@ Para ativá-lo, basta utilizar o comando no contâiner docker: ``` rabbitmq-plug
 
 ### Alta disponibilidade - criando um cluster
 
-O objetivo é criar instâncias em um cluster, para que, caso haja falha em uma instância, as demais possam recuperar as mensagens das filas em que essa isntância por algum motivo, deixou de funcionar. Dessa forma, aplicamos o conceito de alta disponibilidade em nosso sistema, evitando a perca de mensagens.
+O objetivo é criar instâncias em um cluster, para que, caso haja falha em uma instância, as demais possam recuperar as mensagens das filas em que essa isntância por algum motivo, deixou de funcionar. Dessa forma, aplicamos o conceito de alta disponibilidade em nosso sistema, evitando a perda de mensagens.
 
 - criar uma network no docker, para que as instâncias possam se comunicar:
 
