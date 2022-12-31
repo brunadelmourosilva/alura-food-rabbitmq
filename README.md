@@ -135,6 +135,7 @@ Neste ponto, se criarmos uma fila no node rabbit2, por exemplo, e postarmos uma 
 
 - Na interface do RabbitMQ -> Admin -> Policies
     - Adicionar:
+    
     ![image](https://user-images.githubusercontent.com/61791877/210120799-62769b29-adf9-4622-9eab-e4e37a0ffb22.png)
 
 ```
